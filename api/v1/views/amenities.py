@@ -27,3 +27,16 @@ def create_amenity():
     nobj = nobj.to_dict()
     return jsonify(nobj), 201
 
+
+@app_views.route('/amenities', methods=['GET'])
+def all_amenities():
+    """
+        Get all Amenitys
+    """
+    amenities = storage.all('Amenity')
+    amenities_list = []
+
+    for amenity in amenities.values():
+        amenities_list.append(amenity.to_dict())
+
+    return jsonify(amenities_list)
