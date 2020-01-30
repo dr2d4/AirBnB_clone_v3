@@ -2,7 +2,11 @@
 """
     Create routes for status api, ...
 """
+from models.engine.db_storage import classes
+
 from api.v1.views import app_views
+
+from models import storage
 
 from flask import jsonify
 
@@ -15,3 +19,17 @@ def api_status():
     return jsonify({
         "status": "OK"
     })
+
+
+@app_views.route('/stats')
+def api_stats():
+    """
+        Return count of each table / model
+    """
+    count = {}
+
+    for model in classes:
+        name = classes[model].__tablename__
+        count[name] = storage.count(model)
+
+    return jsonify(count)
