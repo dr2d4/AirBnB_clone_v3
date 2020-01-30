@@ -41,3 +41,15 @@ def all_users():
         users_list.append(user.to_dict())
     return jsonify(users_list)
 
+
+@app_views.route('/users/<user_id>', methods=['GET'])
+def get_user(user_id):
+    """
+        Get User by Id
+    """
+    user = storage.get('User', user_id)
+    if user:
+        return jsonify(user.to_dict())
+    else:
+        abort(404)
+
