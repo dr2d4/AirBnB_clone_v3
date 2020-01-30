@@ -66,3 +66,26 @@ def del_user(user_id):
         return jsonify({})
     else:
         abort(404)
+
+
+@app_views.route('/users/<user_id>', methods=['PUT'])
+def put_user(user_id):
+    """
+        Update User by Id
+    """
+    r_json = request.get_json()
+    if not r_json:
+        abort(400, "Not a JSON")
+    objs = storage.all('User')
+    for user in objs.values():
+        if user.id == user_id:
+            r_json.pop('created_at', 0)
+            r_json.pop('updated_at', 0)
+            r_json.pop('id', 0)
+            r_json.pop('email', 0)
+            for attr in r_json:
+                if hasattr(user, attr):
+                    user.__setattr__(attr, r_json[attr])
+            user.save()
+            return jsonify(user.to_dict())
+    abort(404)
