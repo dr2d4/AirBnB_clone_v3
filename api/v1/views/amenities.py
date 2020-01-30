@@ -69,3 +69,33 @@ def del_amenity(amenity_id):
         return jsonify({})
     else:
         abort(404)
+
+
+@app_views.route('/amenities/<amenity_id>', methods=['PUT'])
+def put_amenity(amenity_id):
+    """
+        Update Amenity by Id
+    """
+    r_json = request.get_json()
+
+    if not r_json:
+        abort(400, "Not a JSON")
+
+    objs = storage.all('Amenity')
+
+    for amenity in objs.values():
+
+        if amenity.id == amenity_id:
+            r_json.pop('created_at', 0)
+            r_json.pop('updated_at', 0)
+            r_json.pop('id', 0)
+
+            for attr in r_json:
+                if hasattr(amenity, attr):
+                    amenity.__setattr__(attr, r_json[attr])
+
+            amenity.save()
+
+            return jsonify(amenity.to_dict())
+
+    abort(404)
