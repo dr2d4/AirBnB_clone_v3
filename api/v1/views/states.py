@@ -1,7 +1,5 @@
 #!/usr/bin/python3
-"""
-    States Views
-"""
+""" States Views """
 from flask import jsonify, abort, request
 
 from api.v1.views import app_views
@@ -11,7 +9,7 @@ from models.state import State
 from models import storage
 
 
-@app_views.route('/states/', methods=['POST'])
+@app_views.route('/states', methods=['POST'])
 def create_state():
     """
         Create new State
@@ -30,21 +28,21 @@ def create_state():
     return jsonify(nobj), 201
 
 
-@app_views.route('/states/', methods=['GET'])
-def all_state():
+@app_views.route('/states', methods=['GET'])
+def all_states():
     """
         Get all States
     """
-    all_states = storage.all('State')
+    states = storage.all('State')
     states_list = []
 
-    for state in all_states.values():
+    for state in states.values():
         states_list.append(state.to_dict())
 
     return jsonify(states_list)
 
 
-@app_views.route('/states/<string:state_id>', methods=['GET'])
+@app_views.route('/states/<state_id>', methods=['GET'])
 def get_state(state_id):
     """
         Get State by Id
@@ -57,7 +55,7 @@ def get_state(state_id):
         abort(404)
 
 
-@app_views.route('/states/<string:state_id>', methods=['DELETE'])
+@app_views.route('/states/<state_id>', methods=['DELETE'])
 def del_state(state_id):
     """
         Delete State by Id
@@ -73,7 +71,7 @@ def del_state(state_id):
         abort(404)
 
 
-@app_views.route('/states/<string:state_id>', methods=['PUT'])
+@app_views.route('/states/<state_id>', methods=['PUT'])
 def put_state(state_id):
     """
         Update State by Id
