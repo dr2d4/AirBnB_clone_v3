@@ -42,7 +42,7 @@ def all_amenities():
     return jsonify(amenities_list)
 
 
-@app_views.route('/amenites/<amenity_id>', methods=['GET'])
+@app_views.route('/amenities/<amenity_id>', methods=['GET'])
 def get_amenity(amenity_id):
     """
         Get Amenity by Id
@@ -81,7 +81,7 @@ def put_amenity(amenity_id):
     if not r_json:
         abort(400, "Not a JSON")
 
-    amenity = storage.get('City', amenity_id)
+    amenity = storage.get('Amenity', amenity_id)
 
     if amenity:
         r_json.pop('created_at', 0)
