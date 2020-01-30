@@ -28,3 +28,16 @@ def create_user():
 
     nobj = nobj.to_dict()
     return jsonify(nobj), 201
+
+
+app_views.route('/users', methods=['GET'])
+def all_users():
+    """
+        Get all Users
+    """
+    users = storage.all('User')
+    users_list = []
+    for user in users.values():
+        users_list.append(user.to_dict())
+    return jsonify(users_list)
+
