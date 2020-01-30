@@ -40,3 +40,16 @@ def all_amenities():
         amenities_list.append(amenity.to_dict())
 
     return jsonify(amenities_list)
+
+
+@app_views.route('/amenites/<amenity_id>', methods=['GET'])
+def get_state(state_id):
+    """
+        Get State by Id
+    """
+    amenity = storage.get('Amenity', amenity_id)
+
+    if amenity:
+        return jsonify(amenity.to_dict())
+    else:
+        abort(404)
