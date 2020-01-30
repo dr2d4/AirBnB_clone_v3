@@ -81,21 +81,19 @@ def put_state(state_id):
     if not r_json:
         abort(400, "Not a JSON")
 
-    objs = storage.all('State')
+    state = storage.get('State', state_id)
 
-    for state in objs.values():
+    if state:
+        r_json.pop('created_at', 0)
+        r_json.pop('updated_at', 0)
+        r_json.pop('id', 0)
 
-        if state.id == state_id:
-            r_json.pop('created_at', 0)
-            r_json.pop('updated_at', 0)
-            r_json.pop('id', 0)
+        for attr in r_json:
+            if hasattr(state, attr):
+                state.__setattr__(attr, r_json[attr])
 
-            for attr in r_json:
-                if hasattr(state, attr):
-                    state.__setattr__(attr, r_json[attr])
+        state.save()
 
-            state.save()
-
-            return jsonify(state.to_dict())
+        return jsonify(state.to_dict())
 
     abort(404)
