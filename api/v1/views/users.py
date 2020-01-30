@@ -53,3 +53,16 @@ def get_user(user_id):
     else:
         abort(404)
 
+
+@app_views.route('/users/<user_id>', methods=['DELETE'])
+def del_user(user_id):
+    """
+        Delete User by Id
+    """
+    user = storage.get('User', user_id)
+    if user:
+        storage.delete(user)
+        storage.save()
+        return jsonify({})
+    else:
+        abort(404)
