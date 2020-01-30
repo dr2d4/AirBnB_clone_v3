@@ -53,3 +53,19 @@ def get_state(state_id):
         return jsonify(amenity.to_dict())
     else:
         abort(404)
+
+
+@app_views.route('/amenities/<amenity_id>', methods=['DELETE'])
+def del_amenity(amenity_id):
+    """
+        Delete Amenity by Id
+    """
+    amenity = storage.get('Amenity', amenity_id)
+
+    if amenity:
+        storage.delete(amenity)
+        storage.save()
+
+        return jsonify({})
+    else:
+        abort(404)
