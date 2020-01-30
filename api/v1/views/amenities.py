@@ -43,9 +43,9 @@ def all_amenities():
 
 
 @app_views.route('/amenites/<amenity_id>', methods=['GET'])
-def get_state(state_id):
+def get_amenity(amenity_id):
     """
-        Get State by Id
+        Get Amenity by Id
     """
     amenity = storage.get('Amenity', amenity_id)
 
@@ -81,21 +81,19 @@ def put_amenity(amenity_id):
     if not r_json:
         abort(400, "Not a JSON")
 
-    objs = storage.all('Amenity')
+    amenity = storage.get('City', amenity_id)
 
-    for amenity in objs.values():
+    if amenity:
+        r_json.pop('created_at', 0)
+        r_json.pop('updated_at', 0)
+        r_json.pop('id', 0)
 
-        if amenity.id == amenity_id:
-            r_json.pop('created_at', 0)
-            r_json.pop('updated_at', 0)
-            r_json.pop('id', 0)
+        for attr in r_json:
+            if hasattr(amenity, attr):
+                amenity.__setattr__(attr, r_json[attr])
 
-            for attr in r_json:
-                if hasattr(amenity, attr):
-                    amenity.__setattr__(attr, r_json[attr])
+        amenity.save()
 
-            amenity.save()
-
-            return jsonify(amenity.to_dict())
+        return jsonify(amenity.to_dict())
 
     abort(404)
