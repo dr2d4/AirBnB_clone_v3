@@ -19,6 +19,7 @@ import json
 import os
 import pep8
 import unittest
+
 DBStorage = db_storage.DBStorage
 classes = {"Amenity": Amenity, "City": City, "Place": Place,
            "Review": Review, "State": State, "User": User}
@@ -26,6 +27,7 @@ classes = {"Amenity": Amenity, "City": City, "Place": Place,
 
 class TestDBStorageDocs(unittest.TestCase):
     """Tests to check the documentation and style of DBStorage class"""
+
     @classmethod
     def setUpClass(cls):
         """Set up for the doc tests"""
@@ -95,6 +97,7 @@ test_db_storage.py'])
 
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""
+
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_all_returns_dict(self):
         """Test that all returns a dictionaty"""
@@ -111,3 +114,23 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
+
+    def test_file_get(self):
+        """Test for the get method file_sorage"""
+        try:
+            first_state_id = list(storage.all('State').values())[0].id
+            state = storage.get('State', first_state_id)
+            self.assertEqual(state.id, first_state_id)
+            self.assertIsInstance(state, State)
+        except IndexError:
+            pass
+
+    def test_file_count(self):
+        """Test for the count method file_sorage"""
+        try:
+            count = storage.count('State')
+
+            self.assertIsInstance(count, int)
+            self.assertIsNot(count, None)
+        except IndexError:
+            pass

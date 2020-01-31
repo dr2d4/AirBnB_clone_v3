@@ -69,9 +69,7 @@ test_file_storage.py'])
                             "{:s} method needs a docstring".format(func[0]))
 
     def test_file_get(self):
-        """
-            Test for the get method file_sorage
-        """
+        """Test for the get method file_sorage"""
         try:
             first_state_id = list(storage.all('State').values())[0].id
             state = storage.get('State', first_state_id)
@@ -81,9 +79,7 @@ test_file_storage.py'])
             pass
 
     def test_file_count(self):
-        """
-            Test for the count method file_sorage
-        """
+        """Test for the count method file_sorage"""
         try:
             count = storage.count('State')
 
@@ -138,3 +134,23 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+    def test_file_get(self):
+        """Test for the get method file_sorage"""
+        try:
+            first_state_id = list(storage.all('State').values())[0].id
+            state = storage.get('State', first_state_id)
+            self.assertEqual(state.id, first_state_id)
+            self.assertIsInstance(state, State)
+        except IndexError:
+            pass
+
+    def test_file_count(self):
+        """Test for the count method file_sorage"""
+        try:
+            count = storage.count('State')
+
+            self.assertIsInstance(count, int)
+            self.assertIsNot(count, None)
+        except IndexError:
+            pass
