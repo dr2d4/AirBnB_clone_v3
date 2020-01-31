@@ -29,7 +29,7 @@ def create_review(place_id):
     if not storage.get('User', r_json.get('user_id')):
         abort(404)
 
-    nobj = Review(**r_json)
+    nobj = Review(place_id=place_id, **r_json)
     nobj.save()
 
     nobj = nobj.to_dict()
