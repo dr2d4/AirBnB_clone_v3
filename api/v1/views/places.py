@@ -32,3 +32,17 @@ def create_place(city_id):
     nobj.save()
 
     return jsonify(resp), 201
+
+
+@app_views.route('/cities/<city_id>/places', methods=['GET'])
+def all_places(city_id):
+    """
+        Get all Places
+    """
+    city = storage.get('City', city_id)
+    places_list = []
+    if not city:
+        abort(404)
+    places = city.places
+    for place in places:
+        places_list.append(place.to_dict())
