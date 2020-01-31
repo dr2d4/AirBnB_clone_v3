@@ -88,8 +88,9 @@ def put_place(place_id):
     if place:
         r_json.pop('created_at', 0)
         r_json.pop('updated_at', 0)
-        r_json.pop('id', 0)
+        r_json.pop('city_id', 0)
         r_json.pop('user_id', 0)
+        r_json.pop('id', 0)
         for attr in r_json:
             if hasattr(place, attr):
                 place.__setattr__(attr, r_json[attr])
