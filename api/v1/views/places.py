@@ -14,10 +14,10 @@ def create_place(city_id):
     """
         Create new Place
     """
-    r_json = request.get_json()
-
     if not storage.get('City', city_id):
         abort(404)
+
+    r_json = request.get_json()
 
     if not r_json:
         abort(400, "Not a JSON")
@@ -43,13 +43,16 @@ def all_places(city_id):
     """
     city = storage.get('City', city_id)
     places_list = []
+
     if not city:
         abort(404)
+
     places = city.places
+
     for place in places:
         places_list.append(place.to_dict())
 
-        return jsonify(places_list)
+    return jsonify(places_list)
 
 
 @app_views.route('/places/<place_id>', methods=['GET'])
@@ -58,8 +61,10 @@ def get_place(place_id):
         Get Place by Id
     """
     place = storage.get('Place', place_id)
+
     if place:
         return jsonify(place.to_dict())
+
     abort(404)
 
 
@@ -69,10 +74,13 @@ def del_place(place_id):
         Delete Place by Id
     """
     place = storage.get('Place', place_id)
+
     if place:
         storage.delete(place)
         storage.save()
+
         return jsonify({})
+
     abort(404)
 
 
@@ -82,18 +90,25 @@ def put_place(place_id):
         Update Place by Id
     """
     r_json = request.get_json()
+
     if not r_json:
         abort(400, "Not a JSON")
+
     place = storage.get('Place', place_id)
+
     if place:
         r_json.pop('created_at', 0)
         r_json.pop('updated_at', 0)
-        r_json.pop('city_id', 0)
         r_json.pop('user_id', 0)
+        r_json.pop('city_id', 0)
         r_json.pop('id', 0)
+
         for attr in r_json:
             if hasattr(place, attr):
                 place.__setattr__(attr, r_json[attr])
-        place.save()
+
+        storage.save()
+
         return jsonify(place.to_dict())
+
     abort(404)
