@@ -30,7 +30,7 @@ def create_user():
     return jsonify(nobj), 201
 
 
-app_views.route('/users', methods=['GET'])
+@app_views.route('/users', methods=['GET'])
 def all_users():
     """
         Get all Users
@@ -74,18 +74,24 @@ def put_user(user_id):
         Update User by Id
     """
     r_json = request.get_json()
+
     if not r_json:
         abort(400, "Not a JSON")
-    objs = storage.all('User')
-    for user in objs.values():
-        if user.id == user_id:
-            r_json.pop('created_at', 0)
-            r_json.pop('updated_at', 0)
-            r_json.pop('id', 0)
-            r_json.pop('email', 0)
-            for attr in r_json:
-                if hasattr(user, attr):
-                    user.__setattr__(attr, r_json[attr])
-            user.save()
-            return jsonify(user.to_dict())
+
+    user = storage.get('User', user_id)
+
+    if user:
+        r_json.pop('created_at', 0)
+        r_json.pop('updated_at', 0)
+        r_json.pop('email', 0)
+        r_json.pop('id', 0)
+
+        for attr in r_json:
+            if hasattr(user, attr):
+                user.__setattr__(attr, r_json[attr])
+
+        user.save()
+
+        return jsonify(user.to_dict())
+
     abort(404)

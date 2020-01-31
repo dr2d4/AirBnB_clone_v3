@@ -14,6 +14,7 @@ from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
+from models import storage
 import json
 import os
 import pep8
@@ -66,6 +67,24 @@ test_file_storage.py'])
                              "{:s} method needs a docstring".format(func[0]))
             self.assertTrue(len(func[1].__doc__) >= 1,
                             "{:s} method needs a docstring".format(func[0]))
+
+    def test_file_get(self):
+        """
+            Test for the get method file_sorage
+        """
+        first_state_id = list(storage.all('State').values())[0].id
+        state = storage.get('State', first_state_id)
+        self.assertEqual(state.id, first_state_id)
+        self.assertIsInstance(state, State)
+
+    def test_file_count(self):
+        """
+            Test for the count method file_sorage
+        """
+        count = storage.count('State')
+
+        self.assertIsInstance(count, int)
+        self.assertIsNot(count, None)
 
 
 class TestFileStorage(unittest.TestCase):

@@ -51,8 +51,8 @@ def get_state(state_id):
 
     if state:
         return jsonify(state.to_dict())
-    else:
-        abort(404)
+
+    abort(404)
 
 
 @app_views.route('/states/<state_id>', methods=['DELETE'])
@@ -67,8 +67,8 @@ def del_state(state_id):
         storage.save()
 
         return jsonify({})
-    else:
-        abort(404)
+
+    abort(404)
 
 
 @app_views.route('/states/<state_id>', methods=['PUT'])

@@ -25,10 +25,10 @@ def create_city(state_id):
         abort(400, 'Missing name')
 
     nobj = City(state_id=state_id, **r_json)
+    resp = nobj.to_dict()
     nobj.save()
 
-    nobj = nobj.to_dict()
-    return jsonify(nobj), 201
+    return jsonify(resp), 201
 
 
 @app_views.route('/states/<state_id>/cities', methods=['GET'])
@@ -36,13 +36,13 @@ def all_citys(state_id):
     """
         Get all Citys
     """
-    citys = storage.get('State', state_id)
+    state = storage.get('State', state_id)
     citys_list = []
 
-    if not citys:
+    if not state:
         abort(404)
 
-    citys = citys.cities
+    citys = state.cities
 
     for city in citys:
         citys_list.append(city.to_dict())
@@ -59,8 +59,8 @@ def get_city(city_id):
 
     if city:
         return jsonify(city.to_dict())
-    else:
-        abort(404)
+
+    abort(404)
 
 
 @app_views.route('/cities/<city_id>', methods=['DELETE'])
@@ -75,8 +75,8 @@ def del_city(city_id):
         storage.save()
 
         return jsonify({})
-    else:
-        abort(404)
+
+    abort(404)
 
 
 @app_views.route('/cities/<city_id>', methods=['PUT'])
@@ -103,5 +103,5 @@ def put_city(city_id):
         city.save()
 
         return jsonify(city.to_dict())
-    else:
-        abort(404)
+
+    abort(404)
