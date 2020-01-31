@@ -46,3 +46,19 @@ def all_places(city_id):
     places = city.places
     for place in places:
         places_list.append(place.to_dict())
+
+        return jsonify(places_list)
+
+
+@app_views.route('/places/<place_id>', methods=['GET'])
+def get_place(place_id):
+    """
+        Get Place by Id
+    """
+    place = storage.get('Place', place_id)
+    if place:
+        return jsonify(place.to_dict())
+    abort(404)
+
+
+
