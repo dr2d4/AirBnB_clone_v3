@@ -61,4 +61,14 @@ def get_place(place_id):
     abort(404)
 
 
-
+app_views.route('/places/<place_id>', methods=['DELETE'])
+def del_place(place_id):
+    """
+        Delete Place by Id
+    """
+    place = storage.get('Place', place_id)
+    if place:
+        storage.delete(place)
+        storage.save()
+        return jsonify({})
+    abort(404)
