@@ -14,11 +14,10 @@ def create_place(city_id):
     """
         Create new Place
     """
+    r_json = request.get_json()
+
     if not storage.get('City', city_id):
         abort(404)
-    if not storage.get('User', user_id):
-        abort(404)
-    r_json = request.get_json()
 
     if not r_json:
         abort(400, "Not a JSON")
@@ -26,6 +25,9 @@ def create_place(city_id):
         abort(400, 'Missing user_id')
     elif not r_json.get('name'):
         abort(400, 'Missing name')
+
+    if not storage.get('User', r_json.get('user_id')):
+        abort(404)
 
     nobj = Place(city_id=city_id, **r_json)
     resp = nobj.to_dict()
@@ -61,7 +63,7 @@ def get_place(place_id):
     abort(404)
 
 
-app_views.route('/places/<place_id>', methods=['DELETE'])
+@app_views.route('/places/<place_id>', methods=['DELETE'])
 def del_place(place_id):
     """
         Delete Place by Id
